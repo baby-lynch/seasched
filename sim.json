@@ -16,7 +16,7 @@
         "clients_num": 1
     },
     "scheduler_params": {
-        "alpha": 2
+        "alpha": 0.5
     },
     "server_params": {
         "uplink_bdw": 50

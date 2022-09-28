@@ -22,6 +22,6 @@ class Server:
         req.finish_time = req.sched_moment + req.service_time
 
         with open('logs/server.log', 'a', encoding='utf-8') as f:
-            f.write(('Request{} (cost={}, priority={}) arrive at time:{}, scheduled by server at time:{}, Response time:{}, ETA is:{}, Finish Time is:{}\n'.format(
+            f.write(('Request{} (cost={}, priority={}) arrive at time:{}, scheduled by server at time:{}, RT:{}, ST is:{}, FT is:{}\n'.format(
                 req.id, req.cost, req.priority, req.arrive_moment, req.sched_moment, req.response_time, req.service_time, req.finish_time))
             )

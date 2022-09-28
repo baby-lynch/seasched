@@ -101,7 +101,7 @@ class Simulation:
             # uphold for an random expotential distributive time gap
             _lam = self.prob_params['time_params']['lam']
             _time_gap = random.exponential(scale=1/_lam)
-            print(_time_gap)
+            # print(_time_gap)
             time.sleep(_time_gap)
 
             self.reqpool_lock.acquire()

@@ -19,11 +19,7 @@ class Client:
     def generate_req(self) -> Request:
         # set request id, lock to ensure the uniqueness of uid
         _id = self.u_id
-        self.lock.acquire()
-        try:
-            self.u_id += 1
-        finally:
-            self.lock.release()
+        self.u_id += 1
 
         # set creator
         _creator_thread = threading.current_thread().ident
@@ -43,8 +39,10 @@ class Client:
         # print('Request{} create at time:{}, cost is {}'.format(
         #     req.id, req.create_moment, req.cost)
         # )
+
         with open('logs/client.log', 'a', encoding='utf-8')as f:
             f.write(('Request{} (cost={}) create at time:{} by thread{}\n'.format(
                 req.id, req.cost, req.create_moment, req.creator))
             )
+
         return req

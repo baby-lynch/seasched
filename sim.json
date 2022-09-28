@@ -13,12 +13,12 @@
         }
     },
     "client_params": {
-        "clients_num": 1
+        "clients_num": 20
     },
     "scheduler_params": {
-        "alpha": 0.5
+        "alpha": 0
     },
     "server_params": {
-        "uplink_bdw": 50
+        "uplink_bdw": 100
     }
 }

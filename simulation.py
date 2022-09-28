@@ -18,7 +18,7 @@ class Simulation:
         # for storing requests
         self.req_pool = Queue[Request]()
         # for thread safety
-        self.reqpool_lock = threading.RLock()
+        self.lock = threading.RLock()
         # priority queue
         self.prique = PriorityQueue()
         #--------------Parameters-------------#
@@ -97,18 +97,23 @@ class Simulation:
             if time.time() - self.sim_params['start_time'] > self.sim_params['sim_time']:
                 break
             #-------------- Client Thread Task --------------#
-            req = self.client.generate_req()
+            self.lock.acquire()
+            try:
+                req = self.client.generate_req()
+            finally:
+                self.lock.release()
+
             # uphold for an random expotential distributive time gap
             _lam = self.prob_params['time_params']['lam']
             _time_gap = random.exponential(scale=1/_lam)
             # print(_time_gap)
             time.sleep(_time_gap)
 
-            self.reqpool_lock.acquire()
+            self.lock.acquire()
             try:
                 self.req_pool.put(req)
             finally:
-                self.reqpool_lock.release()
+                self.lock.release()
 
     def scheduler_process(self):
         while True:

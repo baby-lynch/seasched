@@ -16,7 +16,7 @@ class Simulation:
     def __init__(self):
         #--------------Resources-------------#
         # for storing requests
-        self.req_pool = Queue[Request]()
+        self.req_pool = Queue()
         # for thread safety
         self.lock = threading.RLock()
         # priority queue
@@ -79,11 +79,17 @@ class Simulation:
     def logs_init(self):
         with open('logs/client.log', 'w+', encoding='utf-8')as f:
             f.write(
-                "*----------------------------- Client Simulation Results -----------------------------*\n"
+                "*-----------------------------{} Client Simulation Results -----------------------------*\n".format(
+                    time.strftime('%Y:%m:%d %H:%M:%S',
+                                  time.localtime(int(time.time())))
+                )
             )
         with open('logs/server.log', 'w+', encoding='utf-8')as f:
             f.write(
-                "*----------------------------- Server Simulation Results -----------------------------*\n"
+                "*-----------------------------{} Server Simulation Results -----------------------------*\n".format(
+                    time.strftime('%Y:%m:%d %H:%M:%S',
+                                  time.localtime(int(time.time())))
+                )
             )
 
     def sim_init(self):
@@ -125,6 +131,7 @@ class Simulation:
             self.prique.enque(req)
 
     def server_process(self):
+        requests_stats = []
         while True:
             if time.time() - self.sim_params['start_time'] > self.sim_params['sim_time']:
                 break
@@ -132,8 +139,25 @@ class Simulation:
             if not self.prique.empty():
                 req = self.prique.deque()
                 self.server.service(req)
+                requests_stats.append(
+                    {
+                        'id': req.id,
+                        'cost': req.cost,
+                        'priority': req.priority,
+                        'arrive_moment': req.arrive_moment,
+                        'sched_moment': req.sched_moment,
+                        'finish_moment': req.finish_moment,
+                        'response_time': req.response_time,
+                        'service_time': req.service_time
+                    }
+                )
             else:
                 continue
+
+            with open('stats.json', 'w') as fp:
+                json.dump({
+                    'requests': requests_stats
+                }, fp)
 
     def run(self):
         for thread_client in self.thread_clients:

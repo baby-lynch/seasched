@@ -1,7 +1,7 @@
 {
     "sim_params": {
         "start_time": 0,
-        "sim_time": 10
+        "sim_time": 5
     },
     "prob_params": {
         "time_params": {
@@ -13,10 +13,10 @@
         }
     },
     "client_params": {
-        "clients_num": 20
+        "clients_num": 10
     },
     "scheduler_params": {
-        "alpha": 0
+        "alpha": 0.5
     },
     "server_params": {
         "uplink_bdw": 100

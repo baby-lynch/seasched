@@ -8,8 +8,6 @@ class Client:
     def __init__(self, client_params: dict, prob_params: dict, sim_params: dict) -> None:
         # uique request id
         self.u_id = 0
-        # to ensure uniqueness of uid
-        self.lock = threading.RLock()
 
         # simuation_parameters
         self.sim_params = sim_params
@@ -44,5 +42,6 @@ class Client:
             f.write(('Request{} (cost={}) create at time:{} by thread{}\n'.format(
                 req.id, req.cost, req.create_moment, req.creator))
             )
+            f.close()
 
         return req

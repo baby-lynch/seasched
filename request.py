@@ -14,13 +14,13 @@ class Request:
         self.arrive_moment: float
         # the moment when request was scheduled, i.e. deque
         self.sched_moment: float
+        # finish_time = sched_moment + service_time
+        self.finish_moment: float
 
         # response_time = sched_moment - arrive_moment
         self.response_time: float
         # service_time = cost / uplink_bandwidth
         self.service_time: float
-        # finish_time = sched_moment + service_time
-        self.finish_time: float
 
         # priority = arrive_time + alpha * cost
         self.priority: float

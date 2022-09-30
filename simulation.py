@@ -80,14 +80,14 @@ class Simulation:
         with open('logs/client.log', 'w+', encoding='utf-8')as f:
             f.write(
                 "*-----------------------------{} Client Simulation Results -----------------------------*\n".format(
-                    time.strftime('%Y:%m:%d %H:%M:%S',
+                    time.strftime('%Y.%m.%d %H:%M:%S',
                                   time.localtime(int(time.time())))
                 )
             )
         with open('logs/server.log', 'w+', encoding='utf-8')as f:
             f.write(
                 "*-----------------------------{} Server Simulation Results -----------------------------*\n".format(
-                    time.strftime('%Y:%m:%d %H:%M:%S',
+                    time.strftime('%Y.%m.%d %H:%M:%S',
                                   time.localtime(int(time.time())))
                 )
             )
@@ -131,7 +131,8 @@ class Simulation:
             self.prique.enque(req)
 
     def server_process(self):
-        requests_stats = []
+        # harvesting simulation results
+        requests = []
         while True:
             if time.time() - self.sim_params['start_time'] > self.sim_params['sim_time']:
                 break
@@ -139,7 +140,7 @@ class Simulation:
             if not self.prique.empty():
                 req = self.prique.deque()
                 self.server.service(req)
-                requests_stats.append(
+                requests.append(
                     {
                         'id': req.id,
                         'cost': req.cost,
@@ -154,16 +155,25 @@ class Simulation:
             else:
                 continue
 
-            with open('stats.json', 'w') as fp:
-                json.dump({
-                    'requests': requests_stats
-                }, fp)
+            alpha = self.scheduler_params['alpha']
+            stats_filename = 'statistics/stats' + str(alpha)+".json"
+            stats_data = {
+                'alpha': alpha,
+                'requests': requests
+            }
+            with open(stats_filename, 'w') as fp:
+                json.dump(stats_data, fp)
 
     def run(self):
         for thread_client in self.thread_clients:
             thread_client.start()
         self.thread_scheduler.start()
         self.thread_server.start()
+
+        for thread_client in self.thread_clients:
+            thread_client.join()
+        self.thread_scheduler.join()
+        self.thread_server.join()
 
     def daemon(self):
         pass

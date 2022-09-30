@@ -131,16 +131,19 @@ class Simulation:
             self.prique.enque(req)
 
     def server_process(self):
-        # harvesting simulation results
-        requests = []
+        # lists for harvesting simulation results
+        sched_requests = []
+        unsched_requests = []
+
         while True:
             if time.time() - self.sim_params['start_time'] > self.sim_params['sim_time']:
                 break
             #-------------- Server Thread Task --------------#
             if not self.prique.empty():
+                print(self.prique.length())
                 req = self.prique.deque()
                 self.server.service(req)
-                requests.append(
+                sched_requests.append(
                     {
                         'id': req.id,
                         'cost': req.cost,
@@ -155,14 +158,30 @@ class Simulation:
             else:
                 continue
 
-            alpha = self.scheduler_params['alpha']
-            stats_filename = 'statistics/stats' + str(alpha)+".json"
-            stats_data = {
-                'alpha': alpha,
-                'requests': requests
-            }
-            with open(stats_filename, 'w') as fp:
-                json.dump(stats_data, fp)
+        # pick out unscheduled request when simulation done
+        while not self.prique.empty():
+            unsched_request = self.prique.deque()
+            unsched_request.wait_time = self.sim_params['sim_time'] - \
+                unsched_request.arrive_moment
+            unsched_requests.append(
+                {
+                    'id': unsched_request.id,
+                    'arrive_moment': unsched_request.arrive_moment,
+                    'wait_time': unsched_request.wait_time
+                }
+            )
+
+        sim_time = self.sim_params['sim_time']
+        alpha = self.scheduler_params['alpha']
+        stats_filename = 'statistics/stats' + str(alpha)+".json"
+        stats_data = {
+            'sim_time': sim_time,
+            'alpha': alpha,
+            'sched_requests': sched_requests,
+            'unsched_requests': unsched_requests
+        }
+        with open(stats_filename, 'w') as fp:
+            json.dump(stats_data, fp)
 
     def run(self):
         for thread_client in self.thread_clients:

@@ -17,3 +17,6 @@ class PriorityQueue:
 
     def empty(self) -> bool:
         return len(self.heap) == 0
+
+    def length(self) -> int:
+        return len(self.heap)

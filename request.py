@@ -21,6 +21,9 @@ class Request:
         self.response_time: float
         # service_time = cost / uplink_bandwidth
         self.service_time: float
+        # this property is to be calculated for requests who are unscheduled during the who simulation
+        # wait_time = sim_time - arrive_moment
+        self.wait_time: float
 
         # priority = arrive_time + alpha * cost
         self.priority: float

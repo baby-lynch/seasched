@@ -1,1 +1,24 @@
-{"sim_params": {"start_time": 0, "sim_time": 10}, "prob_params": {"time_params": {"lam": 500}, "cost_params": {"min_cost": 1024, "max_cost": 1048576}}, "client_params": {"clients_num": 5}, "scheduler_params": {"alpha": 10}, "server_params": {"uplink_bdw": 100}}
+{
+    "sim_params": {
+        "start_time": 0,
+        "sim_time": 10
+    },
+    "prob_params": {
+        "time_params": {
+            "lam": 500
+        },
+        "cost_params": {
+            "min_cost": 1024,
+            "max_cost": 1048576
+        }
+    },
+    "client_params": {
+        "clients_num": 10
+    },
+    "scheduler_params": {
+        "alpha": 10
+    },
+    "server_params": {
+        "uplink_bdw": 100
+    }
+}

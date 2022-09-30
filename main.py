@@ -20,12 +20,12 @@ def update_json(filepath: str, alpha: float):
 
 
 def init():
+    # remove old stats.json files first
     cur_dir = (sys.argv[0]).rstrip("main.py")
     stats_dir = cur_dir + "statistics/"
-    # remove old stats.json files first
     for filename in os.listdir(stats_dir):
         if filename.startswith("stats"):
-            print(filename)
+            # print(filename)
             os.remove(stats_dir+filename)
 
 

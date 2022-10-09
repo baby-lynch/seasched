@@ -19,8 +19,6 @@ class Simulation:
         self.req_pool = Queue()
         # for thread safety
         self.lock = threading.RLock()
-        # priority queue
-        self.prique = PriorityQueue()
         #--------------Parameters-------------#
         self.sim_params = {}
         self.prob_params = {}
@@ -28,6 +26,7 @@ class Simulation:
         self.scheduler_params = {}
         self.server_params = {}
         #--------------Components-------------#
+        self.prique: PriorityQueue
         self.client: Client
         self.scheduler: Scheduler
         self.server: Server
@@ -53,6 +52,7 @@ class Simulation:
         self.server_params = params['server_params']
 
     def components_init(self):
+        self.prique = PriorityQueue()
         self.client = Client(
             self.client_params, self.prob_params, self.sim_params
         )
@@ -100,7 +100,7 @@ class Simulation:
 
     def client_process(self):
         while True:
-            if time.time() - self.sim_params['start_time'] > self.sim_params['sim_time']:
+            if time.time() - self.sim_params['start_time'] > self.sim_params['burst_time']:
                 break
             #-------------- Client Thread Task --------------#
             self.lock.acquire()
@@ -125,6 +125,9 @@ class Simulation:
         while True:
             if time.time() - self.sim_params['start_time'] > self.sim_params['sim_time']:
                 break
+            if time.time() - self.sim_params['start_time'] > self.sim_params['burst_time']:
+                if self.req_pool.empty():
+                    break
             #-------------- Scheduler Thread Task --------------#
             req = self.req_pool.get()
             self.scheduler.schedule(req)
@@ -138,9 +141,12 @@ class Simulation:
         while True:
             if time.time() - self.sim_params['start_time'] > self.sim_params['sim_time']:
                 break
+            if time.time() - self.sim_params['start_time'] > self.sim_params['burst_time']:
+                if self.prique.empty():
+                    break
             #-------------- Server Thread Task --------------#
             if not self.prique.empty():
-                # print(self.prique.length())
+                print(self.prique.length())
                 req = self.prique.deque()
                 self.server.service(req)
                 sched_requests.append(

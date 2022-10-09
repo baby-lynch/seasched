@@ -6,7 +6,7 @@ import os
 
 def update_json(filepath: str, alpha: float):
     data = {}
-    # read json and updatedata
+    # read json and update data
     with open(filepath, 'rb') as f:
         data = json.load(f)
         data["scheduler_params"]["alpha"] = alpha

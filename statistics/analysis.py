@@ -80,21 +80,6 @@ def analyze(stats: list):
     fig.set_size_inches(w=12, h=6)
     font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)
 
-    '''
-    #----- paint Efficiency -----#
-    efficiency.plot(analysis.alphas, analysis.ratios_unsched, color="orange",
-                    linewidth=2, linestyle='-', marker='o')
-    efficiency.set_title('Evaluation of Efficiency\n',
-                         fontproperties=font, loc='center')
-    efficiency.set_xlabel('Alpha', fontproperties=font)
-    efficiency.set_ylabel('Ratio of Unscheduled Requests(%)',
-                          fontproperties=font)
-    efficiency.set_xticks(analysis.alphas)
-    for tick in efficiency.get_xticklabels():
-        tick.set_rotation(300)
-    efficiency.grid(axis='y')
-    '''
-
     #----- paint Latency -----#
     latency.plot(analysis.alphas, analysis.avg_RTs, color="blue",
                  linewidth=2, linestyle='-', marker='o')
